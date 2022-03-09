@@ -15,7 +15,7 @@ const CONNECTION_URL =
   "mongodb+srv://Nodejstutorial:Nodejstutorial123@cluster0.0y601.mongodb.net/test?retryWrites=true&w=majority";
 
 app.get("/", (req, res) => {
-  res.send("Server strated at port 122");
+  res.send("Server strated at port 1922");
 });
 app.use(bodyParser.json());
 // app.use(expressValidator);

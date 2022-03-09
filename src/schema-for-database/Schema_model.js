@@ -29,6 +29,17 @@ const Signup = mongoose.Schema({
         }
     }]
 });
+const CrudData = new mongoose.Schema({
+    Name:{
+        type:String,
+    },
+    Email:{
+        type:String,
+    },
+    Phone:{
+        type:Number,
+    }
+}) 
 
 Signup.methods.generateToken = async function(){
 try {
@@ -42,4 +53,5 @@ try {
 }
 Signup.plugin(uniqueValidator, { message: 'Email already in use!' });
 const signUpData = mongoose.model("signUpData",Signup);
-module.exports = {signUpData};
+const CrudDetails = mongoose.model("CrudDetails",CrudData);
+module.exports = {signUpData,CrudDetails};

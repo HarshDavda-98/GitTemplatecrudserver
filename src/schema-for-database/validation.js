@@ -1,7 +1,8 @@
-const { signUpData } = require("./Schema_model");
+const { signUpData, CrudDetails } = require("./Schema_model");
 const bcrypt = require("bcrypt");
 const e = require("express");
 const jwt = require("jsonwebtoken");
+const res = require("express/lib/response");
 
 const GetSignup = async (req, res) => {
   try {
@@ -13,39 +14,50 @@ const GetSignup = async (req, res) => {
     res.status(501);
   }
 };
-
 const PostSignup = async (req, res) => {
-  const {EmailAddress,Password,Confirm_Password,id,LastName,FirstName} = req.body;
-  const Sign = new signUpData({LastName: LastName,EmailAddress: EmailAddress,Password: Password,Confirm_Password: Confirm_Password,id: id,FirstName: FirstName,});
-  
-  const token = await Sign.generateToken().catch((err)=>{console.log(err)});
-  // console.log(token); 
-    await signUpData.findOne({ EmailAddress}).then((EmailAddress) => {
-   if(EmailAddress ===""||Password===""||Confirm_Password===""||FirstName===""||LastName===""){
-        res.status(401).json({
-          msg:"Enter all input fields "
-        })
-   }else if (EmailAddress) {
+  const { EmailAddress, Password, Confirm_Password, id, LastName, FirstName } =
+    req.body;
+  const Sign = new signUpData({
+    LastName: LastName,
+    EmailAddress: EmailAddress,
+    Password: Password,
+    Confirm_Password: Confirm_Password,
+    id: id,
+    FirstName: FirstName,
+  });
+
+  const token = await Sign.generateToken().catch((err) => {
+    console.log(err);
+  });
+  // console.log(token);
+  await signUpData.findOne({ EmailAddress }).then((EmailAddress) => {
+    if (
+      EmailAddress === "" ||
+      Password === "" ||
+      Confirm_Password === "" ||
+      FirstName === "" ||
+      LastName === ""
+    ) {
+      res.status(401).json({
+        msg: "Enter all input fields ",
+      });
+    } else if (EmailAddress) {
       res.status(401).json({
         msg: "Email_already_registered",
-      })
-    }else if(Password !==Confirm_Password){
+      });
+    } else if (Password !== Confirm_Password) {
       res.status(401).json({
-        msg:"Please check the Confirm_Password"
-      })
-    } 
-    else if (!EmailAddress) {
+        msg: "Please check the Confirm_Password",
+      });
+    } else if (!EmailAddress) {
       Sign.save();
       res.status(201).json({
         msg: "Data_Entered_Successfully",
       });
     }
   });
-  // console.log(token);
 };
-const GetLogin = (req, res) => {
-  res.send("Get the logins");
-};
+
 const PostLogin = async (req, res) => {
   const { EmailAddress, Password } = req.body;
   const LogIn = await signUpData.findOne({ EmailAddress: EmailAddress });
@@ -63,4 +75,48 @@ const Signout = async (req, res) => {
     res.status(201).json({ msg: "success", signout });
   }
 };
-module.exports = { GetSignup, PostSignup, PostLogin, GetLogin, Signout };
+
+const GetCrudDetails = async (req, res) => {
+  try {
+    const Crud = await CrudDetails.find();
+    res.status(202);
+    res.send(Crud);
+  } catch (error) {
+    res.status(401).json({ Msg: "Data not found" });
+  }
+};
+const PostCrudDetails = async (req, res) => {
+  const { Email, Name, Phone } = req.body;
+  const postCrud = await new CrudDetails({ Email, Name, Phone });
+  if (Email === "" || Name === "" || Phone === "") {
+    res.status(401).json({ Msg: "Please Enter all data" });
+  } else if (Phone === null) {
+    res.status(401).json({ Msg: "Phone Number is not valid" });
+  } else if (postCrud) {
+    postCrud.save();
+    res.status(201).json({ Msg: "Data Entered Successfully...." });
+  } else {
+    res.status(401).json({ Msg: "Technical issue so Please try later..." });
+  }
+};
+
+const GetuserDetailsById = async(req,res)=>{
+  if(CrudDetails){
+    const data = await CrudDetails.find({_id:req.params._id});
+    res.send(data)
+  }else{
+    res.send("No data found");
+  }
+}
+
+
+
+module.exports = {
+  GetSignup,
+  PostSignup,
+  PostLogin,
+  Signout,
+  GetCrudDetails,
+  PostCrudDetails,
+  GetuserDetailsById,
+};
