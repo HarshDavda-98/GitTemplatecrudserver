@@ -96,16 +96,16 @@ const PostCrudDetails = async (req, res) => {
     postCrud.save();
     res.status(201).json({ Msg: "Data Entered Successfully...." });
   } else {
-    res.status(401).json({ Msg: "Technical issue so Please try later..." });
+    res.status(401).json({ Msg: "Technical  issue so Please try later..." });
   }
 };
 
-const GetuserDetailsById = async(req,res)=>{
-  if(CrudDetails){
-    const data = await CrudDetails.find({_id:req.params._id});
-    res.send(data)
-  }else{
-    res.send("No data found");
+const GetUserDetailById = async(req,res)=>{
+  if(CrudDetails) {
+    const Dataa =  await CrudDetails.find({_id:req.params._id});
+    return res.status(200).json(Dataa);
+  } else{
+    return res.status(500).json(Dataa);
   }
 }
 
@@ -118,5 +118,5 @@ module.exports = {
   Signout,
   GetCrudDetails,
   PostCrudDetails,
-  GetuserDetailsById,
+  GetUserDetailById
 };
