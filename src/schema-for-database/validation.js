@@ -108,8 +108,38 @@ const GetUserDetailById = async(req,res)=>{
     return res.status(500).json(Dataa);
   }
 }
+const PutUserDetailById=async(req,res)=>{
+  if (CrudDetails) {
+    const updated = await CrudDetails.findOneAndUpdate(
+      { _id: req.params._id },
+      {
+        $set: {
+          _id: req.body._id,
+          id:req.body.id,
+          Email: req.body.Email,
+          Phone:req.body.Phone,
+          Name: req.body.Name,
+        },
+      },
+      { new: true }
+      );
+      res.status(200).send({msg:updated });
+    } else {
+      console.log("not able to edit")
+      res.status(503).send("Not albe to edit");
+    }
+}
 
-
+const deleteUserDetailById=async(req,res)=>{
+  if(CrudDetails){
+    const deletedata = await CrudDetails.findByIdAndDelete({_id:req.params._id})
+    res.status(201);
+    res.send({Msg:" Data_Deleted "})
+  }else{
+    res.status(500);
+    res.send({Msg:"Not able to  Delete.."})
+  }
+}
 
 module.exports = {
   GetSignup,
@@ -118,5 +148,7 @@ module.exports = {
   Signout,
   GetCrudDetails,
   PostCrudDetails,
-  GetUserDetailById
+  GetUserDetailById,
+  PutUserDetailById,
+  deleteUserDetailById,
 };

@@ -7,7 +7,9 @@ const {
   Signout,
   GetCrudDetails,
   PostCrudDetails,
-  GetUserDetailById
+  GetUserDetailById,
+  PutUserDetailById,
+  deleteUserDetailById,
 } = require("../schema-for-database/validation");
 
 poster.post("/signup", PostSignup);
@@ -20,4 +22,6 @@ poster.get('/signup/CrudDetails',GetCrudDetails);
 poster.post('/signup/CrudDetails',PostCrudDetails);
 
 poster.get('/signup/CrudDetails/:_id',GetUserDetailById);
+poster.delete('/signup/CrudDetails/:_id',deleteUserDetailById);
+poster.put('/signup/CrudDetails/:_id',PutUserDetailById);
 module.exports = poster;
